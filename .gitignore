@@ -1,0 +1,23 @@
+# WhiteboxTools binary (large, users download themselves)
+WhiteboxTools_win_amd64/
+
+# Python
+__pycache__/
+*.pyc
+
+# Temp files from the script
+*_extract_river_temp/
+
+# Output shapefiles (user-generated)
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
