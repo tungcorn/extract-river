@@ -2,14 +2,14 @@
 
 Extract river/stream centerlines from a DEM file and output as shapefile. No QGIS needed.
 
-Trích xuất đường sông (centerline) từ file DEM, xuất ra shapefile. Không cần mở QGIS.
+**[Tiếng Việt](README.vi.md)**
 
-## Requirements / Yêu cầu
+## Requirements
 
 - Python 3 + rasterio (`pip install rasterio`)
-- WhiteboxTools — download from [whiteboxgeo.com](https://www.whiteboxgeo.com/download-whiteboxtools/) and extract into `WhiteboxTools_win_amd64/` folder
+- [WhiteboxTools](https://www.whiteboxgeo.com/download-whiteboxtools/) — download and extract into `WhiteboxTools_win_amd64/` folder
 
-## Usage / Cách dùng
+## Usage
 
 ```
 extract_river.bat <dem.tif> <output.shp> [threshold]
@@ -25,11 +25,7 @@ The threshold controls stream detail level:
 - **High** (500, 1000) — main rivers only, fewer branches
 - **Low** (5, 10) — includes small tributaries
 
-Threshold quyết định mức độ chi tiết:
-- **Cao** (500, 1000) → chỉ sông chính, ít nhánh
-- **Thấp** (5, 10) → nhiều nhánh nhỏ
-
-## Examples / Ví dụ
+## Examples
 
 ```bash
 # Auto threshold (recommended)
@@ -39,15 +35,7 @@ extract_river.bat D:\data\dem.tif D:\data\river.shp
 extract_river.bat D:\data\dem.tif D:\data\river.shp 500
 ```
 
-## How it works / Pipeline
-
-1. **Convert** — Re-encode DEM to WhiteboxTools-compatible GeoTIFF (removes PREDICTOR=3)
-2. **Fill Depressions** — Remove spurious sinks in the DEM
-3. **D8 Flow Direction** — Compute flow direction for each pixel (8-direction model)
-4. **D8 Flow Accumulation** — Count upstream contributing cells per pixel
-5. **Extract Streams + Vectorize** — Threshold the accumulation raster and convert stream pixels to polyline shapefile
-
-## Setup / Cài đặt
+## Setup
 
 ```bash
 # 1. Install Python dependency
@@ -61,6 +49,14 @@ pip install rasterio
 # 3. Run
 extract_river.bat path\to\dem.tif path\to\output.shp
 ```
+
+## How it works
+
+1. **Convert** — Re-encode DEM to WhiteboxTools-compatible GeoTIFF (removes PREDICTOR=3)
+2. **Fill Depressions** — Remove spurious sinks in the DEM
+3. **D8 Flow Direction** — Compute flow direction for each pixel (8-direction model)
+4. **D8 Flow Accumulation** — Count upstream contributing cells per pixel
+5. **Extract Streams + Vectorize** — Threshold the accumulation raster and convert stream pixels to polyline shapefile
 
 ## Credits
 
