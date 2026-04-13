@@ -108,6 +108,9 @@ if errorlevel 1 (
     goto :cleanup_fail
 )
 
+echo        Writing .prj and .cpg...
+python "%SCRIPT_DIR%convert_tif.py" write_prj "%DEM%" "%OUTPUT%"
+
 echo.
 echo ============================================================
 echo  DONE!
