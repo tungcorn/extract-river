@@ -1,64 +1,74 @@
 # extract-river
 
-Trích xuất đường sông (centerline) từ file DEM, xuất ra shapefile. Không cần mở QGIS.
+Trích xuất đường sông (centerline) từ file DEM, xuất ra shapefile. Có 2 phương pháp:
 
 **[English](README.md)**
 
-## Yêu cầu
+## Phương pháp
 
-- Python 3 + rasterio (`pip install rasterio`)
-- [WhiteboxTools](https://www.whiteboxgeo.com/download-whiteboxtools/) — tải về và giải nén vào thư mục `WhiteboxTools_win_amd64/`
+| | QGIS/GRASS (khuyên dùng) | WhiteboxTools |
+|---|---|---|
+| **Script** | `extract_river_qgis.bat` | `extract_river_whitebox.bat` |
+| **Thuật toán** | MFD (Multi-Flow Direction) | D8 (Single-Flow Direction) |
+| **Xử lý hố trũng** | A* priority-flood | Fill đơn giản |
+| **Chất lượng** | Tốt hơn (mạng lưới đầy đủ hơn) | Tốt (có thể thiếu nhánh nhỏ) |
+| **Phụ thuộc** | Cần cài QGIS | WhiteboxTools + Python rasterio |
+| **Threshold mặc định** | 100 (kích thước lưu vực tối thiểu) | Tự tính (1% max accumulation) |
 
-## Cách dùng
+## Bắt đầu nhanh
 
+### Cách 1: QGIS/GRASS (khuyên dùng)
+
+```bash
+# Yêu cầu: đã cài QGIS (winget install OSGeo.QGIS_LTR)
+extract_river_qgis.bat D:\data\dem.tif D:\data\river.shp
+extract_river_qgis.bat D:\data\dem.tif D:\data\river.shp 100
 ```
-extract_river.bat <dem.tif> <output.shp> [threshold]
+
+Kết quả giống hệt chạy GRASS `r.watershed` + `r.to.vect` trong QGIS GUI.
+
+### Cách 2: WhiteboxTools
+
+```bash
+# Yêu cầu: Python 3 + rasterio, WhiteboxTools binary
+extract_river_whitebox.bat D:\data\dem.tif D:\data\river.shp
+extract_river_whitebox.bat D:\data\dem.tif D:\data\river.shp 500
 ```
+
+## Tham số
 
 | Tham số | Bắt buộc | Mô tả |
 |---|---|---|
 | `dem.tif` | Có | File DEM đầu vào |
 | `output.shp` | Có | File shapefile đầu ra |
-| `threshold` | Không | Ngưỡng tích lũy dòng chảy. Mặc định: tự tính (1% max accumulation) |
+| `threshold` | Không | Ngưỡng trích xuất sông (xem bên dưới) |
 
-Threshold quyết định mức độ chi tiết:
-- **Cao** (500, 1000) → chỉ sông chính, ít nhánh
-- **Thấp** (5, 10) → nhiều nhánh nhỏ
+### Hướng dẫn threshold
 
-## Ví dụ
+- **QGIS**: kích thước lưu vực tối thiểu (cells). Mặc định: 100
+- **WhiteboxTools**: số cells tích lũy dòng chảy. Mặc định: tự tính (1% max)
 
-```bash
-# Tự tính threshold (khuyên dùng)
-extract_river.bat D:\data\dem.tif D:\data\river.shp
-
-# Chỉ định threshold
-extract_river.bat D:\data\dem.tif D:\data\river.shp 500
-```
+Threshold cao → ít sông hơn (chỉ sông chính). Thấp → nhiều nhánh nhỏ hơn.
 
 ## Cài đặt
 
+### Cho QGIS method
+
 ```bash
-# 1. Cài thư viện Python
-pip install rasterio
-
-# 2. Tải WhiteboxTools
-# Từ https://www.whiteboxgeo.com/download-whiteboxtools/
-# Giải nén sao cho whitebox_tools.exe nằm tại:
-#   WhiteboxTools_win_amd64/WBT/whitebox_tools.exe
-
-# 3. Chạy
-extract_river.bat duong_dan\dem.tif duong_dan\output.shp
+winget install OSGeo.QGIS_LTR
 ```
 
-## Cách hoạt động
+### Cho WhiteboxTools method
 
-1. **Convert** — Chuyển DEM sang format tương thích WhiteboxTools (bỏ PREDICTOR=3)
-2. **Fill Depressions** — Lấp hố trũng giả trong DEM
-3. **D8 Flow Direction** — Tính hướng chảy mỗi pixel (mô hình 8 hướng)
-4. **D8 Flow Accumulation** — Đếm số pixel thượng nguồn chảy qua mỗi điểm
-5. **Extract Streams + Vector hóa** — Lọc theo ngưỡng và chuyển pixel sông thành polyline shapefile
+```bash
+pip install rasterio
+# Tải WhiteboxTools từ https://www.whiteboxgeo.com/download-whiteboxtools/
+# Giải nén sao cho whitebox_tools.exe nằm tại:
+#   WhiteboxTools_win_amd64/WBT/whitebox_tools.exe
+```
 
 ## Credits
 
+- [GRASS GIS](https://grass.osgeo.org/) qua [QGIS](https://qgis.org/) `qgis_process`
 - [WhiteboxTools](https://github.com/jblindsay/whitebox-tools) — Prof. John Lindsay (MIT License)
 - [rasterio](https://github.com/rasterio/rasterio) — đọc/ghi GeoTIFF
