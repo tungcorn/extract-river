@@ -52,20 +52,37 @@ Higher threshold = fewer streams (main rivers only). Lower = more tributaries.
 
 ## Setup
 
-### For QGIS method
+### 1. Install dependencies
 
+**For QGIS method:**
 ```bash
 winget install OSGeo.QGIS_LTR
 ```
 
-### For WhiteboxTools method
-
+**For WhiteboxTools method:**
 ```bash
 pip install rasterio
 # Download WhiteboxTools from https://www.whiteboxgeo.com/download-whiteboxtools/
 # Extract so that whitebox_tools.exe is at:
 #   WhiteboxTools_win_amd64/WBT/whitebox_tools.exe
 ```
+
+### 2. Configure paths (optional)
+
+Copy `config.example.txt` to `config.txt` and set your paths:
+
+```ini
+# Path to qgis_process
+QGIS_PROCESS=D:\QGIS 3.44.9\bin\qgis_process-qgis-ltr.bat
+
+# Path to whitebox_tools.exe
+WHITEBOX_TOOLS=D:\tools\WhiteboxTools\whitebox_tools.exe
+
+# Default threshold (overridden by command-line argument)
+# DEFAULT_THRESHOLD=100
+```
+
+If `config.txt` is not set, scripts will auto-detect installed tools.
 
 ## How it works
 

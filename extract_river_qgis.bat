@@ -29,17 +29,34 @@ if "%OUTPUT%"=="" (
     exit /b 1
 )
 
+set "SCRIPT_DIR=%~dp0"
+
+:: --- Read config.txt ---
+set "QP="
+if exist "%SCRIPT_DIR%config.txt" (
+    for /f "usebackq tokens=1,* delims==" %%a in ("%SCRIPT_DIR%config.txt") do (
+        if /i "%%a"=="QGIS_PROCESS" if not "%%b"=="" set "QP=%%b"
+        if /i "%%a"=="DEFAULT_THRESHOLD" if "%THRESHOLD%"=="" if not "%%b"=="" set "THRESHOLD=%%b"
+    )
+)
+
 if "%THRESHOLD%"=="" set "THRESHOLD=100"
 
-:: --- Find qgis_process ---
-set "QP="
-
-:: Check D:\ for QGIS installations
-for /f "delims=" %%i in ('dir /b /ad "D:\QGIS*" 2^>nul') do (
-    if exist "D:\%%i\bin\qgis_process-qgis-ltr.bat" set "QP=D:\%%i\bin\qgis_process-qgis-ltr.bat"
-    if "!QP!"=="" if exist "D:\%%i\bin\qgis_process-qgis.bat" set "QP=D:\%%i\bin\qgis_process-qgis.bat"
+:: --- Validate or auto-detect qgis_process ---
+if not "!QP!"=="" (
+    if not exist "!QP!" (
+        echo [WARN] qgis_process from config.txt not found: !QP!
+        echo        Trying auto-detect...
+        set "QP="
+    )
 )
-:: Check C:\Program Files for QGIS installations
+
+if "!QP!"=="" (
+    for /f "delims=" %%i in ('dir /b /ad "D:\QGIS*" 2^>nul') do (
+        if exist "D:\%%i\bin\qgis_process-qgis-ltr.bat" set "QP=D:\%%i\bin\qgis_process-qgis-ltr.bat"
+        if "!QP!"=="" if exist "D:\%%i\bin\qgis_process-qgis.bat" set "QP=D:\%%i\bin\qgis_process-qgis.bat"
+    )
+)
 if "!QP!"=="" (
     for /f "delims=" %%i in ('dir /b /ad "C:\Program Files\QGIS*" 2^>nul') do (
         if exist "C:\Program Files\%%i\bin\qgis_process-qgis-ltr.bat" set "QP=C:\Program Files\%%i\bin\qgis_process-qgis-ltr.bat"
@@ -48,7 +65,8 @@ if "!QP!"=="" (
 )
 
 if "!QP!"=="" (
-    echo [ERROR] qgis_process not found. Install QGIS: winget install OSGeo.QGIS_LTR
+    echo [ERROR] qgis_process not found.
+    echo        Set QGIS_PROCESS in config.txt or install QGIS: winget install OSGeo.QGIS_LTR
     exit /b 1
 )
 

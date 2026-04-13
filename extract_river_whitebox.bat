@@ -28,11 +28,23 @@ if "%OUTPUT%"=="" (
 )
 
 set "SCRIPT_DIR=%~dp0"
-set "WBT=%SCRIPT_DIR%WhiteboxTools_win_amd64\WBT\whitebox_tools.exe"
 
-if not exist "%WBT%" (
-    echo [ERROR] whitebox_tools.exe not found at: %WBT%
-    echo         Download from https://www.whiteboxgeo.com/download-whiteboxtools/
+:: --- Read config.txt ---
+set "WBT="
+if exist "%SCRIPT_DIR%config.txt" (
+    for /f "usebackq tokens=1,* delims==" %%a in ("%SCRIPT_DIR%config.txt") do (
+        if /i "%%a"=="WHITEBOX_TOOLS" if not "%%b"=="" set "WBT=%%b"
+        if /i "%%a"=="DEFAULT_THRESHOLD" if "%THRESHOLD%"=="" if not "%%b"=="" set "THRESHOLD=%%b"
+    )
+)
+
+:: Fallback to default path
+if "!WBT!"=="" set "WBT=%SCRIPT_DIR%WhiteboxTools_win_amd64\WBT\whitebox_tools.exe"
+
+if not exist "!WBT!" (
+    echo [ERROR] whitebox_tools.exe not found at: !WBT!
+    echo         Set WHITEBOX_TOOLS in config.txt or download from:
+    echo         https://www.whiteboxgeo.com/download-whiteboxtools/
     exit /b 1
 )
 

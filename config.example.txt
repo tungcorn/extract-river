@@ -1,0 +1,26 @@
+# ============================================================
+# extract-river configuration
+# ============================================================
+# Copy this file to config.txt and edit paths for your system.
+# Both scripts read from config.txt in the same folder.
+# Lines starting with # are ignored.
+# ============================================================
+
+# Path to qgis_process (for extract_river_qgis.bat)
+# Leave empty or comment out to auto-detect.
+# Examples:
+#   QGIS_PROCESS=D:\QGIS 3.44.9\bin\qgis_process-qgis-ltr.bat
+#   QGIS_PROCESS=C:\Program Files\QGIS 3.34.14\bin\qgis_process-qgis-ltr.bat
+QGIS_PROCESS=
+
+# Path to whitebox_tools.exe (for extract_river_whitebox.bat)
+# Leave empty or comment out to use default: <script_dir>\WhiteboxTools_win_amd64\WBT\whitebox_tools.exe
+# Examples:
+#   WHITEBOX_TOOLS=D:\tools\WhiteboxTools\whitebox_tools.exe
+#   WHITEBOX_TOOLS=C:\WhiteboxTools\WBT\whitebox_tools.exe
+WHITEBOX_TOOLS=
+
+# Default threshold (optional, overridden by command-line argument)
+# QGIS method: min watershed basin size in cells (default: 100)
+# WhiteboxTools method: flow accumulation cell count (default: auto)
+# DEFAULT_THRESHOLD=100

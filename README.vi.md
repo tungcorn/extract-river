@@ -52,20 +52,37 @@ Threshold cao → ít sông hơn (chỉ sông chính). Thấp → nhiều nhánh
 
 ## Cài đặt
 
-### Cho QGIS method
+### 1. Cài dependencies
 
+**Cho QGIS method:**
 ```bash
 winget install OSGeo.QGIS_LTR
 ```
 
-### Cho WhiteboxTools method
-
+**Cho WhiteboxTools method:**
 ```bash
 pip install rasterio
 # Tải WhiteboxTools từ https://www.whiteboxgeo.com/download-whiteboxtools/
 # Giải nén sao cho whitebox_tools.exe nằm tại:
 #   WhiteboxTools_win_amd64/WBT/whitebox_tools.exe
 ```
+
+### 2. Cấu hình đường dẫn (tùy chọn)
+
+Copy `config.example.txt` thành `config.txt` rồi sửa đường dẫn:
+
+```ini
+# Đường dẫn tới qgis_process
+QGIS_PROCESS=D:\QGIS 3.44.9\bin\qgis_process-qgis-ltr.bat
+
+# Đường dẫn tới whitebox_tools.exe
+WHITEBOX_TOOLS=D:\tools\WhiteboxTools\whitebox_tools.exe
+
+# Threshold mặc định (bị ghi đè bởi tham số dòng lệnh)
+# DEFAULT_THRESHOLD=100
+```
+
+Nếu không có `config.txt`, script sẽ tự tìm tool đã cài trên máy.
 
 ## Credits
 

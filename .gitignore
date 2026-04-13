@@ -1,6 +1,9 @@
 # WhiteboxTools binary (large, users download themselves)
 WhiteboxTools_win_amd64/
 
+# User config (contains local paths)
+config.txt
+
 # Python
 __pycache__/
 *.pyc
